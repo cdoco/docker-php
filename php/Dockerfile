@@ -58,7 +58,8 @@ RUN set -x \
     && make install
 
 # Install php
-RUN yum install libjpeg libpng libjpeg-devel libpng-devel libjpeg-turbo -y \
+RUN set -x \
+    && yum install libjpeg libpng libjpeg-devel libpng-devel libjpeg-turbo -y \
     && yum install freetype freetype-devel -y \
     && yum install libcurl-devel libxml2-devel -y \
     && yum install libjpeg-turbo-devel libXpm-devel -y \
