@@ -1,5 +1,15 @@
-# docker
+## PHP 7.0.2
 
-### 1.nginx+php
-### 2.mysql
-### 3.alpine
+* Centos 7
+* Nginx 1.9.9
+* PHP 7.0.2
+
+## Install Docker
+* ubuntu: `sudo apt-get install docker.io`
+* centos: `sudo yum install docker`
+
+## Usage
+* clone this repo: `git clone phttps://github.com/cdoco/docker`
+* cd in: `cd docker`
+* build it: `docker build -t php ./php`
+* run it: `docker run -d -p 8090:80 php`
