@@ -1,6 +1,6 @@
-## centos-nginx-php
+## PHP 7.0.2
 
-* Centos
+* Centos 7
 * Nginx 1.9.9
 * PHP 7.0.2
 
