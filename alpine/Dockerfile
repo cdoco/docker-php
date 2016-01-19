@@ -4,8 +4,5 @@ MAINTAINER Cdoco <ocdoco@gmail.com>
 
 # Install bash
 RUN set -x \
-    && apk --update add bash gcc wget make tar \
+    && apk --update add bash nginx \
     && rm -rf /var/cache/apk/* \
-    && mkdir /opt/data \
-    && mkdir /opt/source
-    
