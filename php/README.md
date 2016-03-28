@@ -1,8 +1,8 @@
-## PHP 7.0.2
+## PHP 7.0.4
 
 * Centos 7
 * Nginx 1.9.9
-* PHP 7.0.2
+* PHP 7.0.4
 
 ## Install Docker
 * ubuntu: `sudo apt-get install docker.io`
