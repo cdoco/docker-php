@@ -1,10 +1,10 @@
-## PHP 7.0.4
+## PHP 7.0.5
 
 [![Build Status](https://travis-ci.org/cdoco/docker.svg)](https://travis-ci.org/cdoco/docker)
 
 * Centos 7
 * Nginx 1.9.9
-* PHP 7.0.4
+* PHP 7.0.5
 
 ## Install Docker
 * ubuntu: `sudo apt-get install docker.io`
