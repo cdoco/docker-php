@@ -5,6 +5,4 @@ set -e -x
 /opt/source/php/sbin/php-fpm
 
 # start nginx
-/opt/source/nginx/sbin/nginx
-
-tail -f /opt/source/logs/nginx/access.log
+/opt/source/nginx/sbin/nginx -g "daemon off;"

@@ -6,7 +6,7 @@ services:
 - docker
 
 install:
-- docker build -t php ./php
+- docker build -t php ./
 - docker run --name php -d -p 8090:80 php
 
 script:

@@ -2,46 +2,51 @@
 FROM daocloud.io/library/centos:latest
 MAINTAINER Cdoco <ocdoco@gmail.com>
 
+ENV PHP_VERSION 7.0.8
+
 # Update source
 RUN set -x \
     && yum update -y \
     && yum install wget gcc gcc-c++ make perl tar -y \
+    && yum install libjpeg libpng libjpeg-devel libpng-devel libjpeg-turbo -y \
+    && yum install freetype freetype-devel -y \
+    && yum install libcurl-devel libxml2-devel -y \
+    && yum install libjpeg-turbo-devel libXpm-devel -y \
+    && yum install libXpm libicu-devel libmcrypt libmcrypt-devel -y \
+    && yum install libxslt-devel libxslt -y \
+    && yum install openssl openssl-devel bzip2-devel -y \
     && yum clean all \
-    && mkdir /opt/data \
-    && mkdir /opt/source
+    && mkdir -p /opt/data \
+    && mkdir -p /opt/source \
 
 # Install zlib
-RUN set -x \
     && cd /opt/data \
     && wget http://jaist.dl.sourceforge.net/project/libpng/zlib/1.2.8/zlib-1.2.8.tar.gz \
     && tar zxvf zlib-1.2.8.tar.gz \
     && cd zlib-1.2.8 \
     && ./configure --static --prefix=/opt/source/libs/zlib \
     && make \
-    && make install
+    && make install \
 
 # Install openssl
-RUN set -x \
     && cd /opt/data \
     && wget http://www.openssl.org/source/openssl-0.9.8zb.tar.gz \
     && tar zxvf openssl-0.9.8zb.tar.gz \
     && cd openssl-0.9.8zb \
     && ./config --prefix=/opt/source/libs/openssl -L/opt/source/libs/zlib/lib -I/opt/source/libs/zlib/include threads zlib enable-static-engine\
     && make \
-    && make install
+    && make install \
 
 # Install pcre
-RUN set -x \
     && cd /opt/data \
     && wget http://jaist.dl.sourceforge.net/project/pcre/pcre/8.33/pcre-8.33.tar.gz \
     && tar zxvf pcre-8.33.tar.gz \
     && cd pcre-8.33 \
     && ./configure --prefix=/opt/source/libs/pcre \
     && make \
-    && make install
+    && make install \
 
 # Install nginx
-RUN set -x \
     && cd /opt/data \
     && wget http://nginx.org/download/nginx-1.9.9.tar.gz \
     && tar zxvf nginx-1.9.9.tar.gz \
@@ -55,34 +60,22 @@ RUN set -x \
        '--with-http_stub_status_module' \
        '--with-http_gzip_static_module' \
     && make \
-    && make install
-
-# Install php
-RUN set -x \
-    && yum install libjpeg libpng libjpeg-devel libpng-devel libjpeg-turbo -y \
-    && yum install freetype freetype-devel -y \
-    && yum install libcurl-devel libxml2-devel -y \
-    && yum install libjpeg-turbo-devel libXpm-devel -y \
-    && yum install libXpm libicu-devel libmcrypt libmcrypt-devel -y \
-    && yum install libxslt-devel libxslt -y \
-    && yum install openssl openssl-devel bzip2-devel -y \
-    && yum clean all
+    && make install \
 
 # Install libmcrypt
-RUN set -x \
     && cd /opt/data \
     && wget ftp://mcrypt.hellug.gr/pub/crypto/mcrypt/libmcrypt/libmcrypt-2.5.6.tar.gz \
     && tar zxvf libmcrypt-2.5.6.tar.gz \
     && cd libmcrypt-2.5.6 \
     && ./configure \
     && make \
-    && make install
+    && make install \
 
-RUN set -x \
+# Install php
     && cd /opt/data \
-    && wget http://cn2.php.net/distributions/php-7.0.5.tar.gz \
-    && tar zxvf php-7.0.5.tar.gz \
-    && cd php-7.0.5 \
+    && wget http://cn2.php.net/distributions/php-$PHP_VERSION.tar.gz \
+    && tar zxvf php-$PHP_VERSION.tar.gz \
+    && cd php-$PHP_VERSION \
     && './configure' \
        '--prefix=/opt/source/php/' \
        '--with-config-file-path=/opt/source/php/etc/' \
@@ -119,7 +112,11 @@ RUN set -x \
        '--with-zlib' \
        '--with-gettext=' \
     && make \
-    && make install
+    && make install \
+
+# delete data dir
+	&& yum remove -y gcc* make* \
+    && rm -rf /opt/data \
 
 # cp php conf
 ADD files/php/php.ini /opt/source/php/etc/php.ini
@@ -142,10 +139,6 @@ RUN set -x \
 RUN set -x \
     && mkdir /opt/source/www \
     && echo "<?php phpinfo();?>" > /opt/source/www/index.php
-
-# delete data dir
-RUN set -x \
-    && rm -rf /opt/data
 
 # Start php-fpm And nginx
 CMD ["/opt/source/run.sh"]
