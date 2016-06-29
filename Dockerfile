@@ -7,14 +7,8 @@ ENV PHP_VERSION 7.0.8
 # Update source
 RUN set -x \
     && yum update -y \
-    && yum install wget gcc gcc-c++ make perl tar -y \
-    && yum install libjpeg libpng libjpeg-devel libpng-devel libjpeg-turbo -y \
-    && yum install freetype freetype-devel -y \
-    && yum install libcurl-devel libxml2-devel -y \
-    && yum install libjpeg-turbo-devel libXpm-devel -y \
-    && yum install libXpm libicu-devel libmcrypt libmcrypt-devel -y \
-    && yum install libxslt-devel libxslt -y \
-    && yum install openssl openssl-devel bzip2-devel -y \
+    && yum install -y wget gcc gcc-c++ make perl tar libjpeg libpng libjpeg-devel libpng-devel libjpeg-turbo freetype freetype-devel \
+        libcurl-devel libxml2-devel libjpeg-turbo-devel libXpm-devel libXpm libicu-devel libmcrypt libmcrypt-devel libxslt-devel libxslt openssl openssl-devel bzip2-devel \
     && yum clean all \
     && mkdir -p /opt/data \
     && mkdir -p /opt/source \
