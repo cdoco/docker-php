@@ -115,7 +115,7 @@ RUN set -x \
     && make install \
 
 # delete data dir
-	&& yum remove -y gcc* make* \
+    && yum remove -y gcc* make* \
     && rm -rf /opt/data \
 
 # cp php conf
