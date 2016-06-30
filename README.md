@@ -16,8 +16,8 @@
 * build it: `docker build -t php ./`
 * run it: `docker run --name some-php -d -p 8090:80 php`
 
-## Volume local project directory
-* volume local directory: `docker run --name some-php -v /some/content:/opt/source/www:ro -d -p 8090:80 php`
+## Volume Dir
+* volume local dir: `docker run --name some-php -v /some/content:/opt/source/www:ro -d -p 8090:80 php`
 
-## Edit the configuration file for PHP or nginx
+## Edit The Configuration File
 * you can modify the configuration file in the files directory.
