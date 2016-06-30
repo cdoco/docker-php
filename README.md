@@ -14,4 +14,10 @@
 * clone this repo: `git clone phttps://github.com/cdoco/docker-php`
 * cd in: `cd docker-php`
 * build it: `docker build -t php ./`
-* run it: `docker run -d -p 8090:80 php`
+* run it: `docker run --name some-php -d -p 8090:80 php`
+
+## Volume Dir
+* volume local dir: `docker run --name some-php -v /some/content:/opt/source/www:ro -d -p 8090:80 php`
+
+## Edit Config
+* you can modify the configuration file in the files directory.
