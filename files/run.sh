@@ -2,7 +2,7 @@
 set -e -x
 
 # start php-fpm
-/opt/source/php/sbin/php-fpm
+/data/server/php/sbin/php-fpm
 
 # start nginx
-/opt/source/nginx/sbin/nginx -g "daemon off;"
+/data/server/nginx/sbin/nginx -g "daemon off;"

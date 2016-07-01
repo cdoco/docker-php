@@ -10,54 +10,54 @@ RUN set -x \
     && yum install -y wget gcc gcc-c++ make perl tar libjpeg libpng libjpeg-devel libpng-devel libjpeg-turbo freetype freetype-devel \
         libcurl-devel libxml2-devel libjpeg-turbo-devel libXpm-devel libXpm libicu-devel libmcrypt libmcrypt-devel libxslt-devel libxslt openssl openssl-devel bzip2-devel \
     && yum clean all \
-    && mkdir -p /opt/data \
-    && mkdir -p /opt/source \
+    && mkdir -p /data/deps \
+    && mkdir -p /data/server \
 
 # Install zlib
-    && cd /opt/data \
+    && cd /data/deps \
     && wget http://jaist.dl.sourceforge.net/project/libpng/zlib/1.2.8/zlib-1.2.8.tar.gz \
     && tar zxvf zlib-1.2.8.tar.gz \
     && cd zlib-1.2.8 \
-    && ./configure --static --prefix=/opt/source/libs/zlib \
+    && ./configure --static --prefix=/data/server/libs/zlib \
     && make \
     && make install \
 
 # Install openssl
-    && cd /opt/data \
+    && cd /data/deps \
     && wget http://www.openssl.org/source/openssl-0.9.8zb.tar.gz \
     && tar zxvf openssl-0.9.8zb.tar.gz \
     && cd openssl-0.9.8zb \
-    && ./config --prefix=/opt/source/libs/openssl -L/opt/source/libs/zlib/lib -I/opt/source/libs/zlib/include threads zlib enable-static-engine\
+    && ./config --prefix=/data/server/libs/openssl -L/data/server/libs/zlib/lib -I/data/server/libs/zlib/include threads zlib enable-static-engine\
     && make \
     && make install \
 
 # Install pcre
-    && cd /opt/data \
+    && cd /data/deps \
     && wget http://jaist.dl.sourceforge.net/project/pcre/pcre/8.33/pcre-8.33.tar.gz \
     && tar zxvf pcre-8.33.tar.gz \
     && cd pcre-8.33 \
-    && ./configure --prefix=/opt/source/libs/pcre \
+    && ./configure --prefix=/data/server/libs/pcre \
     && make \
     && make install \
 
 # Install nginx
-    && cd /opt/data \
+    && cd /data/deps \
     && wget http://nginx.org/download/nginx-1.9.9.tar.gz \
     && tar zxvf nginx-1.9.9.tar.gz \
     && cd nginx-1.9.9 \
     && './configure' \
-       '--prefix=/opt/source/nginx' \
+       '--prefix=/data/server/nginx' \
        '--with-debug' \
-       '--with-openssl=/opt/data/openssl-0.9.8zb' \
-       '--with-zlib=/opt/data/zlib-1.2.8' \
-       '--with-pcre=/opt/data/pcre-8.33' \
+       '--with-openssl=/data/deps/openssl-0.9.8zb' \
+       '--with-zlib=/data/deps/zlib-1.2.8' \
+       '--with-pcre=/data/deps/pcre-8.33' \
        '--with-http_stub_status_module' \
        '--with-http_gzip_static_module' \
     && make \
     && make install \
 
 # Install libmcrypt
-    && cd /opt/data \
+    && cd /data/deps \
     && wget ftp://mcrypt.hellug.gr/pub/crypto/mcrypt/libmcrypt/libmcrypt-2.5.6.tar.gz \
     && tar zxvf libmcrypt-2.5.6.tar.gz \
     && cd libmcrypt-2.5.6 \
@@ -66,14 +66,14 @@ RUN set -x \
     && make install \
 
 # Install php
-    && cd /opt/data \
+    && cd /data/deps \
     && wget http://cn2.php.net/distributions/php-$PHP_VERSION.tar.gz \
     && tar zxvf php-$PHP_VERSION.tar.gz \
     && cd php-$PHP_VERSION \
     && './configure' \
-       '--prefix=/opt/source/php/' \
-       '--with-config-file-path=/opt/source/php/etc/' \
-       '--with-config-file-scan-dir=/opt/source/php/conf.d/' \
+       '--prefix=/data/server/php/' \
+       '--with-config-file-path=/data/server/php/etc/' \
+       '--with-config-file-scan-dir=/data/server/php/conf.d/' \
        '--enable-fpm' \
        '--enable-cgi' \
        '--disable-phpdbg' \
@@ -110,32 +110,31 @@ RUN set -x \
 
 # delete data dir
     && yum remove -y gcc* make* \
-    && rm -rf /opt/data \
+    && rm -rf /data/deps \
 
 # cp php conf
-ADD files/php/php.ini /opt/source/php/etc/php.ini
-ADD files/php/php-fpm.conf /opt/source/php/etc/php-fpm.conf
-ADD files/php/www.conf /opt/source/php/etc/php-fpm.d/www.conf
+ADD files/php/php.ini /data/server/php/etc/php.ini
+ADD files/php/php-fpm.conf /data/server/php/etc/php-fpm.conf
+ADD files/php/www.conf /data/server/php/etc/php-fpm.d/www.conf
 
 # add nginx conf
-ADD files/nginx/nginx.conf /opt/source/nginx/conf/nginx.conf
-ADD files/nginx/default.conf /opt/source/nginx/conf/vhost/default.conf
+ADD files/nginx/nginx.conf /data/server/nginx/conf/nginx.conf
+ADD files/nginx/default.conf /data/server/nginx/conf/vhost/default.conf
 RUN set -x \
-    && mkdir /opt/source/logs \
-    && mkdir /opt/source/logs/nginx \
-    && touch /opt/source/logs/nginx/access.log
+    && mkdir -p /data/logs/nginx \
+    && touch /data/logs/nginx/access.log
 
 # add run.sh
-ADD files/run.sh /opt/source/run.sh
+ADD files/run.sh /data/run.sh
 RUN set -x \
-    && chmod 755 /opt/source/run.sh
+    && chmod u+x /data/run.sh
 
 RUN set -x \
-    && mkdir /opt/source/www \
-    && echo "<?php phpinfo();?>" > /opt/source/www/index.php
+    && mkdir -p /data/www \
+    && echo "<?php phpinfo();?>" > /data/www/index.php
 
 # Start php-fpm And nginx
-CMD ["/opt/source/run.sh"]
+CMD ["/data/run.sh"]
 
 EXPOSE 80
 EXPOSE 443
