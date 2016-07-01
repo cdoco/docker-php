@@ -137,4 +137,3 @@ RUN set -x \
 CMD ["/data/run.sh"]
 
 EXPOSE 80
-EXPOSE 443
