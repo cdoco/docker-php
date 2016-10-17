@@ -2,7 +2,7 @@
 FROM daocloud.io/library/centos:latest
 MAINTAINER Cdoco <ocdoco@gmail.com>
 
-ENV PHP_VERSION 7.0.11
+ENV PHP_VERSION 7.0.12
 
 # Update source
 RUN set -x \
